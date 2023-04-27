@@ -33,7 +33,7 @@ public class FilmValidator {
     }
 
     private static boolean validateDescription(String description) {
-        if (description == null || description.length() > DESCRIPTION_LENGTH_MAX) {
+        if (description == null || description.isBlank() || description.length() > DESCRIPTION_LENGTH_MAX) {
             throw new FilmDescriptionValidateException();
         }
         return true;

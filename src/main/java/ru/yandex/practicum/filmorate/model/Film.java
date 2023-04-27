@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Film {
     @NotBlank
-    private final String name;
+    private String name;
     private int id;
     private double rate;
     @Size(max = 200)

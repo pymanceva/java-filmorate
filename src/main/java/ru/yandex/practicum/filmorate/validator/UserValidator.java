@@ -16,20 +16,21 @@ public class UserValidator {
     }
 
     public static boolean manualValidate(User user) {
+        UserValidator.validate(user);
         return validateEmail(user.getEmail()) &&
                 validateLogin(user.getLogin()) &&
                 validateBirthday(user.getBirthday());
     }
 
     private static boolean validateEmail(String email) {
-        if (email.isBlank() || email.contains("@")) {
+        if (email == null || email.isBlank() || !email.contains("@")) {
             throw new UserEmailValidateException();
         }
         return true;
     }
 
     private static boolean validateLogin(String login) {
-        if (login.isBlank() || login.contains(" ")) {
+        if (login == null || login.isBlank() || login.contains(" ")) {
             throw new UserLoginValidateException();
         }
         return true;
