@@ -34,7 +34,7 @@ public class UserController {
             throw new UserAlreadyExistException();
         } else {
             log.debug("Добавлен пользователь: " + user);
-            user.setId(UserIDGenerator.generateUserId());
+            user.setId(UserIDGenerator.incrementAndGetUserId());
             UserValidator.validate(user);
             users.put(user.getId(), user);
         }

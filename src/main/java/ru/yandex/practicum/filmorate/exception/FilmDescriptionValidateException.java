@@ -5,6 +5,6 @@ import ru.yandex.practicum.filmorate.validator.FilmValidator;
 public class FilmDescriptionValidateException extends RuntimeException {
 
     public FilmDescriptionValidateException() {
-        super("Описание фильма должно быть от 1 до " + FilmValidator.DESCRIPTION_LENGTH_MAX + " символов");
+        super("Описание фильма должно быть от 1 до " + FilmValidator.getDescriptionLengthMax() + " символов");
     }
 }

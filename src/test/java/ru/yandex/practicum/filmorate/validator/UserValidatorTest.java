@@ -16,9 +16,8 @@ class UserValidatorTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("login", "email@mail.ru",
-                LocalDate.of(2000, 1,1),
-                0, "name");
+        user = new User(0, "login", "email@mail.ru",
+                LocalDate.of(2000, 1,1), "name");
     }
 
     @Test

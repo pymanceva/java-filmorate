@@ -11,8 +11,19 @@ import java.time.LocalDate;
 import static java.time.Month.DECEMBER;
 
 public class FilmValidator {
-    public static final int DESCRIPTION_LENGTH_MAX = 200;
-    public static final LocalDate RELEASE_DATE_MIN = LocalDate.of(1895, DECEMBER, 28);
+    private static final int DESCRIPTION_LENGTH_MAX = 200;
+    private static final LocalDate RELEASE_DATE_MIN = LocalDate.of(1895, DECEMBER, 28);
+
+    /* Прошу дать немного обратной связи по соответсвию подобного деления функционала по классам принципам SOLID,
+    о которых мы общались ранее в рамках 8 спринта.
+     */
+    public static LocalDate getReleaseDateMin() {
+        return RELEASE_DATE_MIN;
+    }
+
+    public static int getDescriptionLengthMax() {
+        return DESCRIPTION_LENGTH_MAX;
+    }
 
     public static boolean validate(Film film) {
         return validateReleaseDate(film.getReleaseDate());

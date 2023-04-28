@@ -8,6 +8,6 @@ public class FilmReleaseDateValidateException extends RuntimeException {
 
     public FilmReleaseDateValidateException() {
         super("Дата релиза фильма не может быть раньше " +
-                FilmValidator.RELEASE_DATE_MIN.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                FilmValidator.getReleaseDateMin().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     }
 }

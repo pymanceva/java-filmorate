@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.FilmUpdateException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.util.FilmIDGenerator;
-import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -29,29 +28,25 @@ public class FilmController {
 
     @PostMapping
     public Film addFilm(@RequestBody @Valid @NonNull Film film) {
-        if (FilmValidator.validate(film)) {
-            if (films.containsValue(film)) {
-                log.warn("Добавление существующего фильма " + film);
-                throw new FilmAlreadyExistException();
-            } else {
-                log.debug("Добавлен фильм: " + film);
-                film.setId(FilmIDGenerator.generateFilmId());
-                films.put(film.getId(), film);
-            }
+        if (films.containsValue(film)) {
+            log.warn("Добавление существующего фильма " + film);
+            throw new FilmAlreadyExistException();
+        } else {
+            log.debug("Добавлен фильм: " + film);
+            film.setId(FilmIDGenerator.incrementAndGetFilmId());
+            films.put(film.getId(), film);
         }
         return film;
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody @Valid @NonNull Film film) {
-        if (FilmValidator.validate(film)) {
-            if (films.containsKey(film.getId())) {
-                films.replace(film.getId(), film);
-            } else {
-                throw new FilmUpdateException();
-            }
-            log.debug("Фильм обновлен: " + film);
+        if (films.containsKey(film.getId())) {
+            films.replace(film.getId(), film);
+        } else {
+            throw new FilmUpdateException();
         }
+        log.debug("Фильм обновлен: " + film);
         return film;
     }
 }

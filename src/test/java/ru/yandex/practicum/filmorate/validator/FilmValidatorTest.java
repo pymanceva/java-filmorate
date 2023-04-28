@@ -14,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilmValidatorTest {
 
-    Film film;
+    private Film film;
 
     @BeforeEach
     void setUp() {
-        film = new Film("name", 0, 0, "description",
+        film = new Film(0, "name", 0, "description",
                 LocalDate.of(1895, 12, 28), 90);
     }
 
