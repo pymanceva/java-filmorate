@@ -37,11 +37,11 @@ public class InMemoryUserService implements UserService {
             log.warn("Пользователь не найден: " + friendId);
             throw new UserNotFoundException();
         } else {
-            Set<Long> friends = userStorage.getUserByID(id).getFriends();
+            Set<Long> friends = userStorage.getUserById(id).getFriends();
             friends.add(friendId);
-            userStorage.getUserByID(id).setFriends(friends);
+            userStorage.getUserById(id).setFriends(friends);
 
-            if (!userStorage.getUserByID(friendId).getFriends().contains(id)) {
+            if (!userStorage.getUserById(friendId).getFriends().contains(id)) {
                 addFriend(friendId, id);
             }
 
@@ -59,10 +59,10 @@ public class InMemoryUserService implements UserService {
             throw new UserNotFoundException();
         } else {
             Set<Long> friends = userStorage.getUsers().get(id).getFriends();
-            friends.remove(userStorage.getUserByID(friendId).getId());
+            friends.remove(userStorage.getUserById(friendId).getId());
             userStorage.getUsers().get(id).setFriends(friends);
 
-            if (userStorage.getUserByID(friendId).getFriends().contains(id)) {
+            if (userStorage.getUserById(friendId).getFriends().contains(id)) {
                 deleteFriend(friendId, id);
             }
 
@@ -72,18 +72,18 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public List<User> getFriends(Long id) {
-        return userStorage.getUserByID(id).getFriends().stream()
-                .map(userStorage::getUserByID)
+        return userStorage.getUserById(id).getFriends().stream()
+                .map(userStorage::getUserById)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<User> getCommonFriends(Long id, Long otherId) {
-        Set<Long> friends1 = userStorage.getUserByID(id).getFriends();
-        Set<Long> friends2 = userStorage.getUserByID(otherId).getFriends();
+        Set<Long> friends1 = userStorage.getUserById(id).getFriends();
+        Set<Long> friends2 = userStorage.getUserById(otherId).getFriends();
         return friends1.stream()
                 .filter(friends2::contains)
-                .map(userStorage::getUserByID)
+                .map(userStorage::getUserById)
                 .collect(Collectors.toList());
     }
 
@@ -130,7 +130,7 @@ public class InMemoryUserService implements UserService {
             throw new UserNotFoundException();
         }
         log.trace("Получен пользователь " + id);
-        return userStorage.getUserByID(id);
+        return userStorage.getUserById(id);
     }
 
     @Override
