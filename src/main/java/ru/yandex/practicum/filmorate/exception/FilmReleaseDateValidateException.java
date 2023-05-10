@@ -4,7 +4,7 @@ import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
 import java.time.format.DateTimeFormatter;
 
-public class FilmReleaseDateValidateException extends RuntimeException {
+public class FilmReleaseDateValidateException extends ValidationException {
 
     public FilmReleaseDateValidateException() {
         super("Дата релиза фильма не может быть раньше " +

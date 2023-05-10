@@ -1,9 +1,9 @@
 package ru.yandex.practicum.filmorate.util;
 
 public class UserIDGenerator {
-    private static int id = 0;
+    private static long id = 0;
 
-    public static int incrementAndGetUserId() {
+    public static long incrementAndGetUserId() {
         return ++id;
     }
 }
