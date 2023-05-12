@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.film.service;
+package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.user.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.util.FilmIDGenerator;
 
 import javax.validation.Valid;

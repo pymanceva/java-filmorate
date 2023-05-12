@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.user.service;
+package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.user.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.util.UserIDGenerator;
 import ru.yandex.practicum.filmorate.validator.UserValidator;
 

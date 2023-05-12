@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.user.storage;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.Getter;
 import lombok.NonNull;
