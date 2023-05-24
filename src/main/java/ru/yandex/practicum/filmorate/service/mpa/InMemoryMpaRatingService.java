@@ -17,7 +17,7 @@ import java.util.Collection;
 @Service
 @Getter
 @Slf4j
-public class InMemoryMpaRatingService implements MpaRatingService{
+public class InMemoryMpaRatingService implements MpaRatingService {
 
     private final MpaRatingStorage mpaRatingStorage;
 
