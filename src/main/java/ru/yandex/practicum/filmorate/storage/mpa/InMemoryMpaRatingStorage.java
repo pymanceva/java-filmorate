@@ -12,7 +12,7 @@ import java.util.Map;
 @Component
 @Getter
 @Slf4j
-public class InMemoryMpaRatingStorage implements MpaRatingStorage{
+public class InMemoryMpaRatingStorage implements MpaRatingStorage {
 
     private final Map<Long, MpaRating> mpaRatings = new HashMap<>();
 

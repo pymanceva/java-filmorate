@@ -12,7 +12,7 @@ import java.util.Map;
 @Component
 @Getter
 @Slf4j
-public class InMemoryGenreStorage implements GenreStorage{
+public class InMemoryGenreStorage implements GenreStorage {
 
     private final Map<Long, Genre> genres = new HashMap<>();
 
