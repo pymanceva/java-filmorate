@@ -10,7 +10,7 @@
 
 ### Схема БД
 
-![](https://github.com/pymanceva/java-filmorate/blob/main/src/main/resources/schema.png?raw=true)
+![](https://github.com/pymanceva/java-filmorate/blob/add-friends-likes/ER-diagram.png)
 
 ### Примеры запросов
 
