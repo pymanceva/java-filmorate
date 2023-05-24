@@ -17,7 +17,7 @@ import java.util.Collection;
 @Service
 @Getter
 @Slf4j
-public class InMemoryGenreService implements GenreService{
+public class InMemoryGenreService implements GenreService {
 
     private final GenreStorage genreStorage;
 
