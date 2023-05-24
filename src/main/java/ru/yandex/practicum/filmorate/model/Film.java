@@ -15,12 +15,13 @@ public class Film {
     private long id;
     @NotBlank
     private String name;
-    private double rate;
     @Size(max = 200)
     private String description;
     @ReleaseDate
     private LocalDate releaseDate;
     @Positive
     private int duration;
+    private Set<Genre> genres = new HashSet<>();
+    private MpaRating mpaRating;
     private Set<Long> likes = new HashSet<>();
 }

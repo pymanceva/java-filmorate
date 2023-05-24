@@ -118,7 +118,7 @@ public class InMemoryFilmService implements FilmService {
             log.warn("Запрос несуществующего фильма");
             throw new FilmNotFoundException();
         }
-        log.trace("Полуечен фильм " + id);
+        log.trace("Получен фильм " + id);
         return filmStorage.getFilmById(id);
     }
 
