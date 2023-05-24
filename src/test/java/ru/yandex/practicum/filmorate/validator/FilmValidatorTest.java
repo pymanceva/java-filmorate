@@ -18,8 +18,11 @@ class FilmValidatorTest {
 
     @BeforeEach
     void setUp() {
-        film = new Film(0, "name", 0, "description",
-                LocalDate.of(1895, 12, 28), 90);
+        film = new Film();
+        film.setName("name");
+        film.setDuration(90);
+        film.setDescription("description");
+        film.setReleaseDate(LocalDate.of(1895, 12, 28));
     }
 
     @Test
@@ -30,7 +33,7 @@ class FilmValidatorTest {
 
     @Test
     void validateThrowExceptionWhenFilmReleaseDateIncorrect() {
-        film.setReleaseDate(LocalDate.of(1895, 12,27));
+        film.setReleaseDate(LocalDate.of(1895, 12, 27));
         FilmReleaseDateValidateException e = assertThrows(FilmReleaseDateValidateException.class,
                 () -> FilmValidator.validate(film));
         assertEquals("Дата релиза фильма не может быть раньше 28.12.1895", e.getMessage());
@@ -86,7 +89,7 @@ class FilmValidatorTest {
 
     @Test
     void manualValidateThrowExceptionWhenFilmReleaseDateIncorrect() {
-        film.setReleaseDate(LocalDate.of(1895, 12,27));
+        film.setReleaseDate(LocalDate.of(1895, 12, 27));
         FilmReleaseDateValidateException e = assertThrows(FilmReleaseDateValidateException.class,
                 () -> FilmValidator.manualValidate(film));
         assertEquals("Дата релиза фильма не может быть раньше 28.12.1895", e.getMessage());

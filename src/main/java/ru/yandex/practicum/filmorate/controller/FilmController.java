@@ -2,51 +2,65 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistException;
-import ru.yandex.practicum.filmorate.exception.FilmUpdateException;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.util.FilmIDGenerator;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping("/films")
 public class FilmController {
 
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final FilmService filmService;
+
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
+    @GetMapping("/{id}")
+    public Film getFilmById(@PathVariable("id") Long id) {
+        return filmService.getFilmById(id);
+    }
+
 
     @GetMapping
-    public Collection<Film> getFilms() {
-        log.debug("Текущее количество фильмов: {}", films.size());
-        return films.values();
+    public Collection<Film> getAllFilms() {
+        return filmService.getAllFilms();
     }
 
     @PostMapping
     public Film addFilm(@RequestBody @Valid @NonNull Film film) {
-        if (films.containsValue(film)) {
-            log.warn("Добавление существующего фильма " + film);
-            throw new FilmAlreadyExistException();
-        } else {
-            log.debug("Добавлен фильм: " + film);
-            film.setId(FilmIDGenerator.incrementAndGetFilmId());
-            films.put(film.getId(), film);
-        }
-        return film;
+        return filmService.addFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody @Valid @NonNull Film film) {
-        if (films.containsKey(film.getId())) {
-            films.replace(film.getId(), film);
-        } else {
-            throw new FilmUpdateException();
-        }
-        log.debug("Фильм обновлен: " + film);
-        return film;
+        return filmService.updateFilm(film);
+    }
+
+    @DeleteMapping
+    public Film deleteFilm(@RequestBody @NonNull Film film) {
+        return filmService.deleteFilm(film);
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public void addLike(@PathVariable Long id, @PathVariable Long userId) {
+        filmService.addLike(id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public void deleteLike(@PathVariable Long id, @PathVariable Long userId) {
+        filmService.deleteLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getMostPopularFilmsByLikes(@RequestParam(name = "count", defaultValue = "10") Integer count) {
+        return filmService.getMostPopularFilmsByLikes(count);
     }
 }
