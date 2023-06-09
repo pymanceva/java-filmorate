@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@Component
+@Component("inMemoryMpaRatingStorage")
 @Getter
 @Slf4j
 public class InMemoryMpaRatingStorage implements MpaRatingStorage {
@@ -17,32 +17,35 @@ public class InMemoryMpaRatingStorage implements MpaRatingStorage {
     private final Map<Long, MpaRating> mpaRatings = new HashMap<>();
 
     @Override
-    public Map<Long, MpaRating> getMpaRatings() {
-        return mpaRatings;
-    }
-
-    @Override
-    public void addMpaRating(MpaRating mpaRating) {
+    public MpaRating add(MpaRating mpaRating) {
         mpaRatings.put(mpaRating.getId(), mpaRating);
+        return mpaRating;
     }
 
     @Override
-    public void updateMpaRating(MpaRating mpaRating) {
+    public MpaRating update(MpaRating mpaRating) {
         mpaRatings.replace(mpaRating.getId(), mpaRating);
+        return mpaRating;
     }
 
     @Override
-    public void deleteMpaRating(MpaRating mpaRating) {
+    public MpaRating delete(MpaRating mpaRating) {
         mpaRatings.remove(mpaRating.getId(), mpaRating);
+        return mpaRating;
     }
 
     @Override
-    public MpaRating getMpaRatingById(Long id) {
+    public boolean contains(Long id) {
+        return mpaRatings.containsKey(id);
+    }
+
+    @Override
+    public MpaRating getById(Long id) {
         return mpaRatings.get(id);
     }
 
     @Override
-    public Collection<MpaRating> getAllMpaRatings() {
-        return mpaRatings.values();
+    public List<MpaRating> getAll() {
+        return (List<MpaRating>) mpaRatings.values();
     }
 }

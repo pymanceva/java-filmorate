@@ -13,7 +13,7 @@ public interface UserService {
 
     List<User> getFriends(Long id);
 
-    List<User> getCommonFriends(Long id, Long otherId);
+    Collection<User> getCommonFriends(Long id, Long otherId);
 
     User addUser(User user);
 

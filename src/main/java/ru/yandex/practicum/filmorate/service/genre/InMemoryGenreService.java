@@ -19,7 +19,7 @@ import java.util.Collection;
 @Slf4j
 public class InMemoryGenreService implements GenreService {
 
-    private final GenreStorage genreStorage;
+    protected final GenreStorage genreStorage;
 
     @Autowired
     public InMemoryGenreService(GenreStorage genreStorage) {
@@ -29,12 +29,12 @@ public class InMemoryGenreService implements GenreService {
 
     @Override
     public Genre addGenre(@NonNull @Valid Genre genre) {
-        if (genreStorage.getGenres().containsValue(genre)) {
+        if (genreStorage.contains(genre.getId())) {
             log.warn("Добавление существующего жанра " + genre);
             throw new GenreAlreadyExistException();
         } else {
             genre.setId(GenreIDGenerator.incrementAndGetGenreId());
-            genreStorage.addGenre(genre);
+            genreStorage.add(genre);
             log.debug("Добавлен жанр: " + genre);
         }
         return genre;
@@ -42,8 +42,8 @@ public class InMemoryGenreService implements GenreService {
 
     @Override
     public Genre updateGenre(@NonNull @Valid Genre genre) {
-        if (genreStorage.getGenres().containsValue(genre)) {
-            genreStorage.updateGenre(genre);
+        if (genreStorage.contains(genre.getId())) {
+            genreStorage.update(genre);
             log.debug("Жанр обновлен: " + genre);
         } else {
             log.warn("Обновление несуществующего жанра " + genre);
@@ -54,11 +54,11 @@ public class InMemoryGenreService implements GenreService {
 
     @Override
     public Genre deleteGenre(@NonNull @Valid Genre genre) {
-        if (!genreStorage.getGenres().containsValue(genre)) {
+        if (!genreStorage.contains(genre.getId())) {
             log.warn("Удаление несуществующего жанра " + genre);
             throw new GenreNotFoundException();
         } else {
-            genreStorage.deleteGenre(genre);
+            genreStorage.delete(genre);
             log.debug("Жанр удален: " + genre);
         }
         return genre;
@@ -66,18 +66,18 @@ public class InMemoryGenreService implements GenreService {
 
     @Override
     public Genre getGenreById(Long id) {
-        if (!genreStorage.getGenres().containsKey(id)) {
+        if (!genreStorage.contains(id)) {
             log.warn("Запрос несуществующего жанра " + id);
             throw new GenreNotFoundException();
         } else {
             log.trace("Получен фильм " + id);
-            return genreStorage.getGenreById(id);
+            return genreStorage.getById(id);
         }
     }
 
     @Override
     public Collection<Genre> getAllGenres() {
-        log.debug("Текущее количество жанров: {}", genreStorage.getGenres().size());
-        return genreStorage.getAllGenres();
+        log.debug("Текущее количество жанров: {}", genreStorage.getAll().size());
+        return genreStorage.getAll();
     }
 }

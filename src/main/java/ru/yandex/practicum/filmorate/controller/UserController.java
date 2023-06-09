@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @Slf4j
+@SuppressWarnings("unused")
 public class UserController {
 
     private final UserService userService;
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
+    public Collection<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
         return userService.getCommonFriends(id, otherId);
     }
 

@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.FilmNameValidateException;
 import ru.yandex.practicum.filmorate.exception.FilmReleaseDateValidateException;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +23,7 @@ class FilmValidatorTest {
         film.setName("name");
         film.setDuration(90);
         film.setDescription("description");
-        film.setReleaseDate(LocalDate.of(1895, 12, 28));
+        film.setReleaseDate(Date.valueOf("1895-12-28"));
     }
 
     @Test
@@ -33,7 +34,7 @@ class FilmValidatorTest {
 
     @Test
     void validateThrowExceptionWhenFilmReleaseDateIncorrect() {
-        film.setReleaseDate(LocalDate.of(1895, 12, 27));
+        film.setReleaseDate(Date.valueOf(LocalDate.of(1895, 12, 27)));
         FilmReleaseDateValidateException e = assertThrows(FilmReleaseDateValidateException.class,
                 () -> FilmValidator.validate(film));
         assertEquals("Дата релиза фильма не может быть раньше 28.12.1895", e.getMessage());
@@ -89,7 +90,7 @@ class FilmValidatorTest {
 
     @Test
     void manualValidateThrowExceptionWhenFilmReleaseDateIncorrect() {
-        film.setReleaseDate(LocalDate.of(1895, 12, 27));
+        film.setReleaseDate(Date.valueOf(LocalDate.of(1895, 12, 27)));
         FilmReleaseDateValidateException e = assertThrows(FilmReleaseDateValidateException.class,
                 () -> FilmValidator.manualValidate(film));
         assertEquals("Дата релиза фильма не может быть раньше 28.12.1895", e.getMessage());

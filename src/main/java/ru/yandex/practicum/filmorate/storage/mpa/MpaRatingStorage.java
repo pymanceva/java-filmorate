@@ -1,21 +1,13 @@
 package ru.yandex.practicum.filmorate.storage.mpa;
 
 import ru.yandex.practicum.filmorate.model.MpaRating;
+import ru.yandex.practicum.filmorate.storage.Storage;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 
-public interface MpaRatingStorage {
+public interface MpaRatingStorage extends Storage<MpaRating> {
 
-    Map<Long, MpaRating> getMpaRatings();
+    @Override
+    List<MpaRating> getAll();
 
-    void addMpaRating(MpaRating mpaRating);
-
-    void updateMpaRating(MpaRating mpaRating);
-
-    void deleteMpaRating(MpaRating mpaRating);
-
-    MpaRating getMpaRatingById(Long id);
-
-    Collection<MpaRating> getAllMpaRatings();
 }

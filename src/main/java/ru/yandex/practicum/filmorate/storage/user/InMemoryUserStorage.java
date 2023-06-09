@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Component("inMemoryUserStorage")
 @Getter
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
@@ -19,27 +19,35 @@ public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
 
     @Override
-    public void addUser(@NonNull @Valid User user) {
+    public User add(@NonNull @Valid User user) {
         users.put(user.getId(), user);
+        return user;
     }
 
     @Override
-    public void updateUser(@NonNull @Valid User user) {
+    public User update(@NonNull @Valid User user) {
         users.replace(user.getId(), user);
+        return user;
     }
 
     @Override
-    public void deleteUser(@NonNull @Valid User user) {
+    public User delete(@NonNull @Valid User user) {
         users.remove(user.getId());
+        return user;
     }
 
     @Override
-    public User getUserById(Long id) {
+    public boolean contains(Long id) {
+        return users.containsKey(id);
+    }
+
+    @Override
+    public User getById(Long id) {
         return users.get(id);
     }
 
     @Override
-    public Collection<User> getAllUsers() {
+    public Collection<User> getAll() {
         return users.values();
     }
 }

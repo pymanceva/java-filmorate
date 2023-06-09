@@ -2,8 +2,9 @@ package ru.yandex.practicum.filmorate.service.mpa;
 
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
-import java.util.Collection;
+import java.util.List;
 
+@SuppressWarnings("unused")
 public interface MpaRatingService {
 
     MpaRating addMpaRating(MpaRating mpaRating);
@@ -14,5 +15,5 @@ public interface MpaRatingService {
 
     MpaRating getMpaRatingById(Long id);
 
-    Collection<MpaRating> getAllMpaRatings();
+    List<MpaRating> getAllMpaRatings();
 }

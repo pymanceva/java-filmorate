@@ -12,14 +12,15 @@ import ru.yandex.practicum.filmorate.storage.mpa.MpaRatingStorage;
 import ru.yandex.practicum.filmorate.util.MpaRatingIdGenerator;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import java.util.List;
 
 @Service
 @Getter
 @Slf4j
+@SuppressWarnings("unused")
 public class InMemoryMpaRatingService implements MpaRatingService {
 
-    private final MpaRatingStorage mpaRatingStorage;
+    protected final MpaRatingStorage mpaRatingStorage;
 
     @Autowired
     public InMemoryMpaRatingService(MpaRatingStorage mpaRatingStorage) {
@@ -28,12 +29,12 @@ public class InMemoryMpaRatingService implements MpaRatingService {
 
     @Override
     public MpaRating addMpaRating(@NonNull @Valid MpaRating mpaRating) {
-        if (mpaRatingStorage.getMpaRatings().containsValue(mpaRating)) {
+        if (mpaRatingStorage.contains(mpaRating.getId())) {
             log.warn("Добавление существующего рейтинга " + mpaRating);
             throw new MpaRatingAlreadyExistException();
         } else {
             mpaRating.setId(MpaRatingIdGenerator.incrementAndGetMpaRatingId());
-            mpaRatingStorage.addMpaRating(mpaRating);
+            mpaRatingStorage.add(mpaRating);
             log.debug("Добавлен рейтинг: " + mpaRating);
         }
         return mpaRating;
@@ -41,8 +42,8 @@ public class InMemoryMpaRatingService implements MpaRatingService {
 
     @Override
     public MpaRating updateMpaRating(@NonNull @Valid MpaRating mpaRating) {
-        if (mpaRatingStorage.getMpaRatings().containsValue(mpaRating)) {
-            mpaRatingStorage.updateMpaRating(mpaRating);
+        if (mpaRatingStorage.contains(mpaRating.getId())) {
+            mpaRatingStorage.update(mpaRating);
             log.debug("Рейтинг обновлен: " + mpaRating);
         } else {
             log.warn("Обновление несуществующего рейтинга " + mpaRating);
@@ -53,11 +54,11 @@ public class InMemoryMpaRatingService implements MpaRatingService {
 
     @Override
     public MpaRating deleteMpaRating(@NonNull @Valid MpaRating mpaRating) {
-        if (!mpaRatingStorage.getMpaRatings().containsValue(mpaRating)) {
+        if (!mpaRatingStorage.contains(mpaRating.getId())) {
             log.warn("Удаление несуществующего рейтинга " + mpaRating);
             throw new MpaRatingNotFoundException();
         } else {
-            mpaRatingStorage.deleteMpaRating(mpaRating);
+            mpaRatingStorage.delete(mpaRating);
             log.debug("Рейтинг удален: " + mpaRating);
         }
         return mpaRating;
@@ -65,18 +66,18 @@ public class InMemoryMpaRatingService implements MpaRatingService {
 
     @Override
     public MpaRating getMpaRatingById(Long id) {
-        if (!mpaRatingStorage.getMpaRatings().containsKey(id)) {
+        if (!mpaRatingStorage.contains(id)) {
             log.warn("Запрос несуществующего рейтинга " + id);
             throw new MpaRatingNotFoundException();
         } else {
             log.trace("Получен рейтинг " + id);
-            return mpaRatingStorage.getMpaRatingById(id);
+            return mpaRatingStorage.getById(id);
         }
     }
 
     @Override
-    public Collection<MpaRating> getAllMpaRatings() {
-        log.debug("Текущее количество жанров: {}", mpaRatingStorage.getMpaRatings().size());
-        return mpaRatingStorage.getAllMpaRatings();
+    public List<MpaRating> getAllMpaRatings() {
+        log.debug("Текущее количество жанров: {}", mpaRatingStorage.getAll().size());
+        return mpaRatingStorage.getAll();
     }
 }

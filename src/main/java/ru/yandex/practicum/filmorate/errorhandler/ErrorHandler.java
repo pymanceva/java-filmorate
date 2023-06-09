@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exception.*;
 
 @RestControllerAdvice
+@SuppressWarnings("unused")
 public class ErrorHandler {
 
     @ExceptionHandler({FilmDescriptionValidateException.class,
@@ -28,7 +29,8 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class})
+    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class,
+            MpaRatingNotFoundException.class, GenreNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
