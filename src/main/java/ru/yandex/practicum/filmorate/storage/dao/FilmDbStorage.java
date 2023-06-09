@@ -32,10 +32,10 @@ public class FilmDbStorage implements FilmStorage {
 
     @Autowired
     public FilmDbStorage(
-            JdbcTemplate jdbcTemplate
-            , MpaRatingStorage mpaRatingStorage
-            , GenreStorage genreStorage
-            , LikeStorage likeStorage
+            JdbcTemplate jdbcTemplate,
+            MpaRatingStorage mpaRatingStorage,
+            GenreStorage genreStorage,
+            LikeStorage likeStorage
     ) {
         this.jdbcTemplate = jdbcTemplate;
         this.mpaRatingStorage = mpaRatingStorage;
