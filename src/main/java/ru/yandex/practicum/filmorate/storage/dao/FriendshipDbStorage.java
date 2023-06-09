@@ -52,8 +52,8 @@ public class FriendshipDbStorage implements FriendshipStorage {
     @Override
     public Friendship getById(Long userId, Long friendId) {
         return jdbcTemplate.queryForObject(
-                "SELECT * FROM friendship WHERE user_id = ? AND friend_id = ?"
-                , new FriendshipMapper(), userId, friendId);
+                "SELECT * FROM friendship WHERE user_id = ? AND friend_id = ?",
+                new FriendshipMapper(), userId, friendId);
     }
 
     @Override
