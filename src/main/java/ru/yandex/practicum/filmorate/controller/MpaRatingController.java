@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.MpaRating;
-import ru.yandex.practicum.filmorate.service.mpa.MpaRatingService;
+import ru.yandex.practicum.filmorate.service.interfaces.MpaRatingService;
 
 import java.util.List;
 

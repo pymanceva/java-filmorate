@@ -9,10 +9,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
-import ru.yandex.practicum.filmorate.storage.mapper.FilmMapper;
-import ru.yandex.practicum.filmorate.storage.mpa.MpaRatingStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.dao.mapper.mapper.FilmMapper;
+import ru.yandex.practicum.filmorate.storage.interfaces.MpaRatingStorage;
 
 import java.sql.PreparedStatement;
 import java.util.Collection;
@@ -28,19 +29,19 @@ public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final MpaRatingStorage mpaRatingStorage;
     private final GenreStorage genreStorage;
-    private final LikeDao likeDao;
+    private final LikeStorage likeStorage;
 
     @Autowired
     public FilmDbStorage(
             JdbcTemplate jdbcTemplate
             , MpaRatingStorage mpaRatingStorage
             , GenreStorage genreStorage
-            , LikeDao likeDao
+            , LikeStorage likeStorage
     ) {
         this.jdbcTemplate = jdbcTemplate;
         this.mpaRatingStorage = mpaRatingStorage;
         this.genreStorage = genreStorage;
-        this.likeDao = likeDao;
+        this.likeStorage = likeStorage;
     }
 
     @Override
@@ -106,7 +107,7 @@ public class FilmDbStorage implements FilmStorage {
             genres.add(genreStorage.getById(genreId));
         }
         film.setGenres(genres);
-        film.setLikes(likeDao.getLikes(id));
+        film.setLikes(likeStorage.getLikes(id));
         return film;
     }
 

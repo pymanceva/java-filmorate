@@ -8,8 +8,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.mapper.UserMapper;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dao.mapper.mapper.UserMapper;
+import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
 
 import java.sql.PreparedStatement;
 import java.util.Collection;
