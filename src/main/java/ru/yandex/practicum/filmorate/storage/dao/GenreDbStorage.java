@@ -13,9 +13,7 @@ import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.dao.mapper.mapper.GenreMapper;
 
 import java.sql.PreparedStatement;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -52,7 +50,7 @@ public class GenreDbStorage implements GenreStorage {
     public Genre update(Genre genre) {
         String sqlQuery = "UPDATE genres SET NAME = ? " +
                 "WHERE id = ?";
-        jdbcTemplate.update(sqlQuery, genre.getName());
+        jdbcTemplate.update(sqlQuery, genre.getName(), genre.getId());
         return genre;
     }
 

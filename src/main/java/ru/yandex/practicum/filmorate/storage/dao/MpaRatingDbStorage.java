@@ -48,7 +48,7 @@ public class MpaRatingDbStorage implements MpaRatingStorage {
     public MpaRating update(MpaRating mpaRating) {
         String sqlQuery = "UPDATE mpa_ratings SET name = ? " +
                 "WHERE id = ?";
-        jdbcTemplate.update(sqlQuery, mpaRating.getName());
+        jdbcTemplate.update(sqlQuery, mpaRating.getName(), mpaRating.getId());
         return mpaRating;
     }
 

@@ -19,12 +19,12 @@ import java.util.Objects;
 @Repository
 @Primary
 @SuppressWarnings("unused")
-public class UserDBStorage implements UserStorage {
+public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserDBStorage(JdbcTemplate jdbcTemplate) {
+    public UserDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

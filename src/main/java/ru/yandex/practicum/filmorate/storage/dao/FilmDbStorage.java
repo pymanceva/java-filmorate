@@ -16,9 +16,8 @@ import ru.yandex.practicum.filmorate.storage.dao.mapper.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.storage.interfaces.MpaRatingStorage;
 
 import java.sql.PreparedStatement;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Repository
@@ -101,8 +100,10 @@ public class FilmDbStorage implements FilmStorage {
         Film film = jdbcTemplate.queryForObject(
                 "SELECT * FROM films WHERE id=?", new FilmMapper(), id);
         film.setMpa(mpaRatingStorage.getById(film.getMpa().getId()));
-        Collection<Long> genresId = genreStorage.getGenresOfFilm(id);
-        Collection<Genre> genres = new HashSet<>();
+        Collection<Long> genresId = genreStorage.getGenresOfFilm(id).stream()
+                .sorted()
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        Collection<Genre> genres = new LinkedHashSet<>();
         for (Long genreId : genresId) {
             genres.add(genreStorage.getById(genreId));
         }

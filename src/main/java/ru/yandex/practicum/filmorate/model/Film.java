@@ -8,10 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.sql.Date;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.TreeSet;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -26,6 +23,6 @@ public class Film {
     @Positive
     private int duration;
     private MpaRating mpa;
-    private Collection<Genre> genres = new TreeSet<>(Comparator.comparingLong(Genre::getId));
+    private Collection<Genre> genres = new LinkedHashSet<>();
     private Collection<Long> likes = new HashSet<>();
 }

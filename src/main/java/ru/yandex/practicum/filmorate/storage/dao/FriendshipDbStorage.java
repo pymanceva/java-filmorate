@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.dao.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 @Repository
 @Primary
 @SuppressWarnings("unused")
-public class FriendshipDBStorage implements FriendshipStorage {
+public class FriendshipDbStorage implements FriendshipStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public FriendshipDBStorage(JdbcTemplate jdbcTemplate) {
+    public FriendshipDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

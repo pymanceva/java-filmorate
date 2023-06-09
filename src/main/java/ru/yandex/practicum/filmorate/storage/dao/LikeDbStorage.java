@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.dao.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MpaRating;
-import ru.yandex.practicum.filmorate.storage.dao.mapper.mapper.LikeMapper;
+import ru.yandex.practicum.filmorate.storage.dao.mapper.LikeMapper;
 import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.interfaces.MpaRatingStorage;
