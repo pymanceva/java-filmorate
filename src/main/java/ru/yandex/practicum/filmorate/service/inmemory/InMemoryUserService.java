@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service.inmemory;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -20,8 +21,9 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class InMemoryUserService implements UserService {
+public abstract class InMemoryUserService implements UserService {
 
+    @Qualifier("inMemoryUserStorage")
     protected final UserStorage userStorage;
 
     @Autowired
@@ -138,4 +140,6 @@ public class InMemoryUserService implements UserService {
         log.debug("Текущее количество пользователей: {}", userStorage.getAll().size());
         return userStorage.getAll();
     }
+
+    public abstract boolean checkFriendsToAdd(@NonNull Long id, @NonNull Long friendId);
 }

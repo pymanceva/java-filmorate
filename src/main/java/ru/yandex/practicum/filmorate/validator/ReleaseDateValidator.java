@@ -2,13 +2,13 @@ package ru.yandex.practicum.filmorate.validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.sql.Date;
+import java.time.LocalDate;
 
-public class ReleaseDateValidator implements ConstraintValidator<ReleaseDate, Date> {
+public class ReleaseDateValidator implements ConstraintValidator<ReleaseDate, LocalDate> {
     @Override
-    public boolean isValid(Date date, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(LocalDate date, ConstraintValidatorContext constraintValidatorContext) {
         if (date != null) {
-            return date.toLocalDate().isAfter(FilmValidator.getReleaseDateMin().minusDays(1));
+            return date.isAfter(FilmValidator.getReleaseDateMin().minusDays(1));
         }
         return false;
     }

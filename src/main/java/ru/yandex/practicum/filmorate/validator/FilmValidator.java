@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.exception.FilmNameValidateException;
 import ru.yandex.practicum.filmorate.exception.FilmReleaseDateValidateException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 import static java.time.Month.DECEMBER;
@@ -48,8 +47,8 @@ public class FilmValidator {
         return true;
     }
 
-    private static boolean validateReleaseDate(Date releaseDate) {
-        if (releaseDate.toLocalDate().isBefore(RELEASE_DATE_MIN)) {
+    private static boolean validateReleaseDate(LocalDate releaseDate) {
+        if (releaseDate.isBefore(RELEASE_DATE_MIN)) {
             throw new FilmReleaseDateValidateException();
         }
         return true;

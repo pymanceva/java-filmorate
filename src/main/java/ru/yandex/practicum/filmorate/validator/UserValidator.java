@@ -5,7 +5,6 @@ import ru.yandex.practicum.filmorate.exception.UserEmailValidateException;
 import ru.yandex.practicum.filmorate.exception.UserLoginValidateException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 public class UserValidator {
@@ -37,8 +36,8 @@ public class UserValidator {
         return true;
     }
 
-    private static boolean validateBirthday(Date birthday) {
-        if (birthday.toLocalDate().isAfter(LocalDate.now())) {
+    private static boolean validateBirthday(LocalDate birthday) {
+        if (birthday.isAfter(LocalDate.now())) {
             throw new UserBirthdayValidateException();
         }
         return true;

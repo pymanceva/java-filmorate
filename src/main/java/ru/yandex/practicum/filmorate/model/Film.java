@@ -7,8 +7,10 @@ import ru.yandex.practicum.filmorate.validator.ReleaseDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.sql.Date;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +21,7 @@ public class Film {
     @Size(max = 200)
     private String description;
     @ReleaseDate
-    private Date releaseDate;
+    private LocalDate releaseDate;
     @Positive
     private int duration;
     private MpaRating mpa;

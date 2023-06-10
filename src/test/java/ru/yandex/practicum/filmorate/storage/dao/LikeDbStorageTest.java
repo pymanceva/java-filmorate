@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -35,7 +35,7 @@ public class LikeDbStorageTest {
         film.setName("Фильм");
         film.setDuration(90);
         film.setDescription("Описание");
-        film.setReleaseDate(Date.valueOf("1896-01-02"));
+        film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setMpa(new MpaRating(1L, null));
         filmDbStorage.add(film);
 
@@ -84,7 +84,7 @@ public class LikeDbStorageTest {
         filmPopular.setName("Фильм топ");
         filmPopular.setDuration(90);
         filmPopular.setDescription("Описание топ");
-        filmPopular.setReleaseDate(Date.valueOf("1896-01-02"));
+        filmPopular.setReleaseDate(LocalDate.of(2000, 01, 01));
         filmPopular.setMpa(new MpaRating(1L, null));
         filmDbStorage.add(filmPopular);
         likeDbStorage.add(1L, 1L);

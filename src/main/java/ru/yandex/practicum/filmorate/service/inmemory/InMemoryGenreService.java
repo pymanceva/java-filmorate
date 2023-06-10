@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.GenreAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.GenreNotFoundException;
@@ -20,6 +21,7 @@ import java.util.Collection;
 @Slf4j
 public class InMemoryGenreService implements GenreService {
 
+    @Qualifier("inMemoryGenreStorage")
     protected final GenreStorage genreStorage;
 
     @Autowired

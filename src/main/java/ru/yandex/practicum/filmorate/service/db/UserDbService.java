@@ -35,29 +35,23 @@ public class UserDbService extends InMemoryUserService {
 
     @Override
     public void addFriend(@NonNull Long id, @NonNull Long friendId) {
-        if (!userStorage.contains(id)) {
-            log.warn("Пользователь не найден: " + id);
-            throw new UserNotFoundException();
-        } else if (!userStorage.contains(friendId)) {
-            log.warn("Пользователь не найден: " + friendId);
-            throw new UserNotFoundException();
-        } else {
+        if (checkFriendsToAdd(id, friendId)) {
             friendshipStorage.add(id, friendId);
             log.debug("Пользователь " + id + " добавил в друзья пользователя " + friendId);
+        } else {
+            log.warn("Пользователь не найден");
+            throw new UserNotFoundException();
         }
     }
 
     @Override
     public void deleteFriend(@NonNull Long id, @NonNull Long friendId) {
-        if (!userStorage.contains(id)) {
-            log.warn("Пользователь не найден: " + id);
-            throw new UserNotFoundException();
-        } else if (!userStorage.contains(friendId)) {
-            log.warn("Пользователь не найден: " + friendId);
-            throw new UserNotFoundException();
-        } else {
+        if (checkFriendsToAdd(id, friendId)) {
             friendshipStorage.delete(id, friendId);
             log.debug("Пользователь " + id + " удалил из друзей пользователя " + friendId);
+        } else {
+            log.warn("Пользователь не найден");
+            throw new UserNotFoundException();
         }
     }
 
@@ -105,5 +99,18 @@ public class UserDbService extends InMemoryUserService {
     @Override
     public Collection<User> getAllUsers() {
         return super.getAllUsers();
+    }
+
+    @Override
+    public boolean checkFriendsToAdd(@NonNull Long id, @NonNull Long friendId) {
+        Collection<User> users = userStorage.getAll();
+        boolean ifUserExists = users.stream()
+                .map(User::getId)
+                .filter(userId -> userId.equals(id)).count() == 1;
+        boolean ifFriendExists = users.stream()
+                .map(User::getId)
+                .filter(userId -> userId.equals(friendId)).count() == 1;
+
+        return ifUserExists && ifFriendExists;
     }
 }

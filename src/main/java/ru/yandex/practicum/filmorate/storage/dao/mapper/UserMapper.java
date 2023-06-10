@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.dao.mapper.mapper;
+package ru.yandex.practicum.filmorate.storage.dao.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import ru.yandex.practicum.filmorate.model.User;
@@ -13,7 +13,7 @@ public class UserMapper implements RowMapper<User> {
         user.setId(rs.getLong("id"));
         user.setLogin(rs.getNString("login"));
         user.setEmail(rs.getNString("email"));
-        user.setBirthday(rs.getDate("birthday"));
+        user.setBirthday(rs.getDate("birthday").toLocalDate());
         user.setName(rs.getNString("name"));
         return user;
     }

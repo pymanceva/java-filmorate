@@ -7,17 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistException;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.inmemory.InMemoryFilmService;
-import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
-import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
-import ru.yandex.practicum.filmorate.storage.interfaces.MpaRatingStorage;
-import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.*;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -42,29 +38,23 @@ public class FilmDbService extends InMemoryFilmService {
 
     @Override
     public void addLike(@NonNull Long id, Long userId) {
-        if (!filmStorage.contains(id)) {
-            log.warn("Добавление лайка несуществующему фильму " + id);
-            throw new FilmNotFoundException();
-        } else if (!userStorage.contains(userId)) {
-            log.warn("Добавление лайка от несуществующего пользователя " + userId);
-            throw new UserNotFoundException();
-        } else {
+        try {
             likeStorage.add(id, userId);
             log.debug("Добален лайк от " + userId + " фильму " + id);
+        } catch (SQLException e) {
+            log.warn("Один или оба объекта не найдены");
         }
     }
 
+
     @Override
     public void deleteLike(@NonNull Long id, Long userId) {
-        if (!filmStorage.contains(id)) {
-            log.warn("Удаление лайка у несуществующего фильма " + id);
-            throw new FilmNotFoundException();
-        } else if (!userStorage.contains(userId)) {
-            log.warn("Удаление лайка от несуществующего пользователя " + userId);
-            throw new UserNotFoundException();
-        } else {
+        if (userStorage.contains(userId)) {
             likeStorage.delete(id, userId);
-            log.debug("Удален лайк от " + userId + " фильму " + id);
+            log.debug("Удален лайк от юзера" + userId + " фильму " + id);
+        } else {
+            log.warn("Пользователь не найден: " + userId);
+            throw new UserNotFoundException();
         }
     }
 

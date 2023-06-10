@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.MpaRatingAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.MpaRatingNotFoundException;
@@ -21,6 +22,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class InMemoryMpaRatingService implements MpaRatingService {
 
+    @Qualifier("inMemoryMpaRatingStorage")
     protected final MpaRatingStorage mpaRatingStorage;
 
     @Autowired

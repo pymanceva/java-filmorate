@@ -8,7 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.MpaRating;
-import ru.yandex.practicum.filmorate.storage.dao.mapper.mapper.MpaRatingMapper;
+import ru.yandex.practicum.filmorate.storage.dao.mapper.MpaRatingMapper;
 import ru.yandex.practicum.filmorate.storage.interfaces.MpaRatingStorage;
 
 import java.sql.PreparedStatement;

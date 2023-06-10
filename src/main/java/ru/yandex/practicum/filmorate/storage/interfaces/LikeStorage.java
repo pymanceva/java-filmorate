@@ -2,11 +2,12 @@ package ru.yandex.practicum.filmorate.storage.interfaces;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Collection;
 
 public interface LikeStorage {
 
-    void add(Long filmId, Long userId);
+    void add(Long filmId, Long userId) throws SQLIntegrityConstraintViolationException;
 
     void delete(Long filmId, Long userId);
 
@@ -18,4 +19,5 @@ public interface LikeStorage {
 
     Collection<Film> getMostPopularFilmsByLikes(long count);
 
+    boolean filmAndUserExist(Long filmId, Long userId);
 }

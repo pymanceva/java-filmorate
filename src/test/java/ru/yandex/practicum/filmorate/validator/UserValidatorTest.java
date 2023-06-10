@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.exception.UserEmailValidateException;
 import ru.yandex.practicum.filmorate.exception.UserLoginValidateException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +19,7 @@ class UserValidatorTest {
         user = new User();
         user.setLogin("login");
         user.setEmail("email@mail.ru");
-        user.setBirthday(Date.valueOf("2020-01-01"));
+        user.setBirthday(LocalDate.of(2020, 1, 1));
         user.setName("name");
     }
 
@@ -111,7 +110,7 @@ class UserValidatorTest {
 
     @Test
     void manualValidateShouldThrowExceptionWhenBirthdayIsInFuture() {
-        user.setBirthday(Date.valueOf(LocalDate.now().plusDays(1)));
+        user.setBirthday((LocalDate.now().plusDays(1)));
         UserBirthdayValidateException e = assertThrows(UserBirthdayValidateException.class,
                 () -> UserValidator.manualValidate(user));
         assertEquals("Дата рождения не может быть в будущем", e.getMessage());

@@ -10,7 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -31,7 +31,7 @@ public class FilmDbStorageTest {
         film.setName("Фильм");
         film.setDuration(90);
         film.setDescription("Описание");
-        film.setReleaseDate(Date.valueOf("1896-01-02"));
+        film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setMpa(new MpaRating(1L, null));
     }
 

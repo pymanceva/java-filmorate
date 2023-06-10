@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.interfaces.inmemory;
+package ru.yandex.practicum.filmorate.storage.inmemory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

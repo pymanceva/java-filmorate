@@ -36,6 +36,9 @@ public class InMemoryFilmService implements FilmService {
     @Override
     public void addLike(@NonNull Long id, Long userId) {
         if (!filmStorage.contains(id)) {
+            //комментарий в PR видела, однако это InMemory хранилища,
+            // т.е. обращений к БД в рамках этого пакета не происходит.
+            //В классах DAO конструкции с излишними запросами исправлены.
             log.warn("Добавление лайка несуществующему фильму " + id);
             throw new FilmNotFoundException();
         } else if (!userStorage.contains(userId)) {

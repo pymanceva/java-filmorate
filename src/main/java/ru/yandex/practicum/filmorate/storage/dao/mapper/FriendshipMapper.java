@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.dao.mapper.mapper;
+package ru.yandex.practicum.filmorate.storage.dao.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import ru.yandex.practicum.filmorate.model.Friendship;

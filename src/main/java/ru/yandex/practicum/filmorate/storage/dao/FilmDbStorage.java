@@ -12,9 +12,10 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
-import ru.yandex.practicum.filmorate.storage.dao.mapper.mapper.FilmMapper;
+import ru.yandex.practicum.filmorate.storage.dao.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.storage.interfaces.MpaRatingStorage;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,7 +56,7 @@ public class FilmDbStorage implements FilmStorage {
                     sqlQuery, new String[]{"id"});
             preparedStatement.setString(1, film.getName());
             preparedStatement.setString(2, film.getDescription());
-            preparedStatement.setDate(3, film.getReleaseDate());
+            preparedStatement.setDate(3, Date.valueOf(film.getReleaseDate()));
             preparedStatement.setInt(4, film.getDuration());
             preparedStatement.setLong(5, film.getMpa().getId());
             return preparedStatement;

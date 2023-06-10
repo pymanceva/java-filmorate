@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.interfaces.inmemory;
+package ru.yandex.practicum.filmorate.storage.inmemory;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -49,5 +49,4 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Collection<Film> getAll() {
         return films.values();
     }
-
 }
