@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.dao.mapper.GenreMapper;
+import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
 
 import java.sql.PreparedStatement;
 import java.util.*;
@@ -79,13 +79,23 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     @Override
-    public Collection<Long> getGenresOfFilm(Long filmId) {
-        String sqlQuery = "SELECT GENRE_ID FROM FILM_GENRES WHERE FILM_ID = ?";
-        return jdbcTemplate.queryForList(sqlQuery, Long.class, filmId);
+    public Collection<Genre> getGenresOfFilm(Long filmId) {
+        String sqlQuery = "SELECT g.id AS id, name " +
+                "FROM film_genres fg " +
+                "LEFT JOIN genres g ON " +
+                "fg.genre_id = g.id " +
+                "WHERE film_id = ?";
+        return jdbcTemplate.query(sqlQuery, new GenreMapper(), filmId);
     }
 
     @Override
     public Collection<Genre> addGenresOfFilm(Film film) {
+        //Варианта замены не нашла. При любом раскладе нужно добавить ровно то количество строк, сколько
+        //жанров у этого фильма, т.е. выполнить это кол-во запросов.
+        //Все опрошенные студенты также делали множественными запросами.
+        //В связи с сжатыми сроками оставляю так - в этом спринте нельзя использовать каникулы для доработки.
+        String sqlQuery = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
+
         Collection<Genre> genres = new LinkedHashSet<>();
         if (film.getGenres() != null) {
             Set<Long> genresId = film.getGenres().stream()
@@ -104,5 +114,26 @@ public class GenreDbStorage implements GenreStorage {
     public Collection<Genre> updateGenresOfFilm(Film film) {
         jdbcTemplate.update("DELETE FROM FILM_GENRES WHERE FILM_ID = ?", film.getId());
         return addGenresOfFilm(film);
+    }
+
+    @Override
+    public Map<Long, Collection<Genre>> getAllFilmGenres(Collection<Film> films) {
+        final String sql = "SELECT fg.film_id AS film_id, g.id AS genre_id, g.name AS name FROM film_genres fg " +
+                "LEFT JOIN genres g ON fg.genre_id = g.id " +
+                "WHERE fg.film_id in (%s)";
+
+        Map<Long, Collection<Genre>> filmGenresMap = new HashMap<>();
+        Collection<String> listId = films.stream().map(film -> String.valueOf(film.getId())).collect(Collectors.toList());
+
+        jdbcTemplate.query(String.format(sql, String.join(",", listId)), rs -> {
+            Genre genre = new Genre(rs.getInt("genre_id"), rs.getString("name"));
+
+            Long filmId = rs.getLong("film_id");
+
+            filmGenresMap.putIfAbsent(filmId, new ArrayList<>());
+            filmGenresMap.get(filmId).add(genre);
+        });
+
+        return filmGenresMap;
     }
 }

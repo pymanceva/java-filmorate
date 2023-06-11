@@ -14,8 +14,9 @@ import ru.yandex.practicum.filmorate.service.inmemory.InMemoryFilmService;
 import ru.yandex.practicum.filmorate.storage.interfaces.*;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Map;
 
 @Service
 @Getter
@@ -93,15 +94,14 @@ public class FilmDbService extends InMemoryFilmService {
     @Override
     public Collection<Film> getAllFilms() {
         Collection<Film> films = super.getAllFilms();
-        for (Film film : films) {
-            Collection<Long> genresId = genreStorage.getGenresOfFilm(film.getId());
-            Collection<Genre> genres = new HashSet<>();
-            for (Long genreId : genresId) {
-                genres.add(genreStorage.getById(genreId));
-            }
-            film.setGenres(genres);
+        Map<Long, Collection<Genre>> filmGenresMap = genreStorage.getAllFilmGenres(films);
+
+        films.forEach(film -> {
+            Long filmId = film.getId();
+            film.setGenres(filmGenresMap.getOrDefault(filmId, new ArrayList<>()));
             film.setMpa(mpaRatingStorage.getById(film.getMpa().getId()));
-        }
+        });
+
         return films;
     }
 }

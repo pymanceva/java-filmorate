@@ -8,17 +8,16 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
-import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.dao.mapper.FilmMapper;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.interfaces.MpaRatingStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.Objects;
 
 @Component
 @Repository
@@ -101,14 +100,7 @@ public class FilmDbStorage implements FilmStorage {
         Film film = jdbcTemplate.queryForObject(
                 "SELECT * FROM films WHERE id=?", new FilmMapper(), id);
         film.setMpa(mpaRatingStorage.getById(film.getMpa().getId()));
-        Collection<Long> genresId = genreStorage.getGenresOfFilm(id).stream()
-                .sorted()
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-        Collection<Genre> genres = new LinkedHashSet<>();
-        for (Long genreId : genresId) {
-            genres.add(genreStorage.getById(genreId));
-        }
-        film.setGenres(genres);
+        film.setGenres(genreStorage.getGenresOfFilm(id));
         film.setLikes(likeStorage.getLikes(id));
         return film;
     }

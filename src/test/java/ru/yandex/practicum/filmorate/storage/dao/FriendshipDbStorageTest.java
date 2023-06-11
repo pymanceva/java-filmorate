@@ -10,6 +10,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,18 +34,21 @@ public class FriendshipDbStorageTest {
         user1.setId(1);
         user1.setEmail("1@ya.ru");
         user1.setLogin("1");
+        user1.setBirthday(LocalDate.of(2000, 1, 1));
         userDbStorage.add(user1);
 
         User user2 = new User();
         user2.setId(2);
         user2.setEmail("2@ya.ru");
         user2.setLogin("2");
+        user2.setBirthday(LocalDate.of(2000, 1, 1));
         userDbStorage.add(user2);
 
         User user3 = new User();
         user3.setId(3);
         user3.setEmail("3@ya.ru");
         user3.setLogin("3");
+        user3.setBirthday(LocalDate.of(2000, 1, 1));
         userDbStorage.add(user3);
     }
 

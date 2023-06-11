@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component("inMemoryGenreStorage")
 @Getter
@@ -62,11 +61,8 @@ public class InMemoryGenreStorage implements GenreStorage {
     }
 
     @Override
-    public Collection<Long> getGenresOfFilm(Long filmId) {
-        return filmStorage.getById(filmId).getGenres()
-                .stream()
-                .map(Genre::getId)
-                .collect(Collectors.toSet());
+    public Collection<Genre> getGenresOfFilm(Long filmId) {
+        return filmStorage.getById(filmId).getGenres();
     }
 
     @Override
@@ -77,5 +73,10 @@ public class InMemoryGenreStorage implements GenreStorage {
     @Override
     public Collection<Genre> updateGenresOfFilm(Film film) {
         return new HashSet<>();
+    }
+
+    @Override
+    public Map<Long, Collection<Genre>> getAllFilmGenres(Collection<Film> films) {
+        return new HashMap<>();
     }
 }

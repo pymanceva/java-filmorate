@@ -76,4 +76,6 @@ public class MpaRatingDbStorage implements MpaRatingStorage {
     public List<MpaRating> getAll() {
         return jdbcTemplate.query("SELECT * FROM mpa_ratings ORDER BY id", new MpaRatingMapper());
     }
+
+
 }

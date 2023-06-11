@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.interfaces.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.dao.mapper.FriendshipMapper;
 import ru.yandex.practicum.filmorate.storage.dao.mapper.UserMapper;
+import ru.yandex.practicum.filmorate.storage.interfaces.FriendshipStorage;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

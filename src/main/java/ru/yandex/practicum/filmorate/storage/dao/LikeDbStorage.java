@@ -16,7 +16,6 @@ import ru.yandex.practicum.filmorate.storage.interfaces.MpaRatingStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashSet;
 
 @Component
 @Slf4j
@@ -82,11 +81,7 @@ public class LikeDbStorage implements LikeStorage {
             LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
             int duration = rs.getInt("duration");
             MpaRating mpa = mpaRatingStorage.getById(rs.getLong("mpa_rating_id"));
-            Collection<Long> genresId = genreStorage.getGenresOfFilm(filmId);
-            Collection<Genre> genres = new HashSet<>();
-            for (Long genreId : genresId) {
-                genres.add(genreStorage.getById(genreId));
-            }
+            Collection<Genre> genres = genreStorage.getGenresOfFilm(filmId);
             Collection<Long> likes = getLikes(filmId);
 
             Film film = new Film();
