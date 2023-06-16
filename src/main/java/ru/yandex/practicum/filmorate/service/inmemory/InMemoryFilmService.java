@@ -1,22 +1,21 @@
-package ru.yandex.practicum.filmorate.service.film;
+package ru.yandex.practicum.filmorate.service.inmemory;
 
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.service.interfaces.FilmService;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
 import ru.yandex.practicum.filmorate.util.FilmIDGenerator;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,10 +23,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class InMemoryFilmService implements FilmService {
 
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    @Qualifier("inMemoryFilmStorage")
+    protected final FilmStorage filmStorage;
+    @Qualifier("inMemoryUserStorage")
+    protected final UserStorage userStorage;
 
-    @Autowired
     public InMemoryFilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
@@ -35,40 +35,43 @@ public class InMemoryFilmService implements FilmService {
 
     @Override
     public void addLike(@NonNull Long id, Long userId) {
-        if (!filmStorage.getFilms().containsKey(id)) {
+        if (!filmStorage.contains(id)) {
+            //комментарий в PR видела, однако это InMemory хранилища,
+            // т.е. обращений к БД в рамках этого пакета не происходит.
+            //В классах DAO конструкции с излишними запросами исправлены.
             log.warn("Добавление лайка несуществующему фильму " + id);
             throw new FilmNotFoundException();
-        } else if (!userStorage.getUsers().containsKey(userId)) {
+        } else if (!userStorage.contains(userId)) {
             log.warn("Добавление лайка от несуществующего пользователя " + userId);
             throw new UserNotFoundException();
         } else {
-            Set<Long> likes = filmStorage.getFilmById(id).getLikes();
+            Collection<Long> likes = filmStorage.getById(id).getLikes();
             likes.add(userId);
-            filmStorage.getFilmById(id).setLikes(likes);
+            filmStorage.getById(id).setLikes(likes);
             log.debug("Добален лайк от " + userId + " фильму " + id);
         }
     }
 
     @Override
     public void deleteLike(@NonNull Long id, Long userId) {
-        if (!filmStorage.getFilms().containsKey(id)) {
+        if (!filmStorage.contains(id)) {
             log.warn("Удаление лайка у несуществующего фильма " + id);
             throw new FilmNotFoundException();
-        } else if (!userStorage.getUsers().containsKey(userId)) {
+        } else if (!userStorage.contains(userId)) {
             log.warn("Удаление лайка от несуществующего пользователя " + userId);
             throw new UserNotFoundException();
         } else {
-            Set<Long> likes = filmStorage.getFilmById(id).getLikes();
+            Collection<Long> likes = filmStorage.getById(id).getLikes();
             likes.remove(userId);
-            filmStorage.getFilmById(id).setLikes(likes);
+            filmStorage.getById(id).setLikes(likes);
             log.debug("Удален лайк от " + userId + " фильму " + id);
         }
     }
 
     @Override
-    public List<Film> getMostPopularFilmsByLikes(int count) {
+    public Collection<Film> getMostPopularFilmsByLikes(int count) {
         log.trace("Запрошен список " + count + " наиболее популярных фильмов");
-        return filmStorage.getAllFilms()
+        return filmStorage.getAll()
                 .stream()
                 .sorted((f1, f2) -> f2.getLikes().size() - f1.getLikes().size())
                 .limit(count)
@@ -77,12 +80,12 @@ public class InMemoryFilmService implements FilmService {
 
     @Override
     public Film addFilm(@NonNull @Valid Film film) {
-        if (filmStorage.getFilms().containsValue(film)) {
+        if (filmStorage.contains(film.getId())) {
             log.warn("Добавление существующего фильма " + film);
             throw new FilmAlreadyExistException();
         } else {
             film.setId(FilmIDGenerator.incrementAndGetFilmId());
-            filmStorage.addFilm(film);
+            filmStorage.add(film);
             log.debug("Добавлен фильм: " + film);
         }
         return film;
@@ -90,8 +93,8 @@ public class InMemoryFilmService implements FilmService {
 
     @Override
     public Film updateFilm(@NonNull @Valid Film film) {
-        if (filmStorage.getFilms().containsKey(film.getId())) {
-            filmStorage.updateFilm(film);
+        if (filmStorage.contains(film.getId())) {
+            filmStorage.update(film);
             log.debug("Фильм обновлен: " + film);
         } else {
             log.warn("Обновление несуществующего фильма " + film);
@@ -102,11 +105,11 @@ public class InMemoryFilmService implements FilmService {
 
     @Override
     public Film deleteFilm(@NonNull @Valid Film film) {
-        if (!filmStorage.getFilms().containsValue(film)) {
+        if (!filmStorage.contains(film.getId())) {
             log.warn("Удаление несуществующего фильма " + film);
             throw new FilmNotFoundException();
         } else {
-            filmStorage.deleteFilm(film);
+            filmStorage.delete(film);
             log.debug("Фильм удален: " + film);
         }
         return film;
@@ -114,17 +117,17 @@ public class InMemoryFilmService implements FilmService {
 
     @Override
     public Film getFilmById(Long id) {
-        if (!filmStorage.getFilms().containsKey(id)) {
+        if (!filmStorage.contains(id)) {
             log.warn("Запрос несуществующего фильма");
             throw new FilmNotFoundException();
         }
-        log.trace("Полуечен фильм " + id);
-        return filmStorage.getFilmById(id);
+        log.trace("Получен фильм " + id);
+        return filmStorage.getById(id);
     }
 
     @Override
     public Collection<Film> getAllFilms() {
-        log.debug("Текущее количество фильмов: {}", filmStorage.getFilms().size());
-        return filmStorage.getAllFilms();
+        log.debug("Текущее количество фильмов: {}", filmStorage.getAll().size());
+        return filmStorage.getAll();
     }
 }

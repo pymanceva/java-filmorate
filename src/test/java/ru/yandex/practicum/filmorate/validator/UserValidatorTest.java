@@ -19,7 +19,7 @@ class UserValidatorTest {
         user = new User();
         user.setLogin("login");
         user.setEmail("email@mail.ru");
-        user.setBirthday(LocalDate.of(2000, 1, 1));
+        user.setBirthday(LocalDate.of(2020, 1, 1));
         user.setName("name");
     }
 
@@ -110,7 +110,7 @@ class UserValidatorTest {
 
     @Test
     void manualValidateShouldThrowExceptionWhenBirthdayIsInFuture() {
-        user.setBirthday(LocalDate.now().plusDays(1));
+        user.setBirthday((LocalDate.now().plusDays(1)));
         UserBirthdayValidateException e = assertThrows(UserBirthdayValidateException.class,
                 () -> UserValidator.manualValidate(user));
         assertEquals("Дата рождения не может быть в будущем", e.getMessage());

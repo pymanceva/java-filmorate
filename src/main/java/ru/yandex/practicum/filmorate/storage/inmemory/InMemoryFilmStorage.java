@@ -1,45 +1,52 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.storage.inmemory;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Component("inMemoryFilmStorage")
 @Getter
-@Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
 
     private final Map<Long, Film> films = new HashMap<>();
 
     @Override
-    public void addFilm(@NonNull @Valid Film film) {
+    public Film add(@NonNull @Valid Film film) {
         films.put(film.getId(), film);
+        return film;
     }
 
     @Override
-    public void updateFilm(@NonNull @Valid Film film) {
+    public Film update(@NonNull @Valid Film film) {
         films.replace(film.getId(), film);
+        return film;
     }
 
     @Override
-    public void deleteFilm(@NonNull @Valid Film film) {
+    public Film delete(@NonNull @Valid Film film) {
         films.remove(film.getId());
+        return film;
     }
 
     @Override
-    public Film getFilmById(Long id) {
+    public boolean contains(Long id) {
+        return films.containsKey(id);
+    }
+
+    @Override
+    public Film getById(Long id) {
         return films.get(id);
     }
 
     @Override
-    public Collection<Film> getAllFilms() {
+    public Collection<Film> getAll() {
         return films.values();
     }
 }

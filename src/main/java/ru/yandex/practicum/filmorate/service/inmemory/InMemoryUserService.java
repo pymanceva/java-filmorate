@@ -1,13 +1,15 @@
-package ru.yandex.practicum.filmorate.service.user;
+package ru.yandex.practicum.filmorate.service.inmemory;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.service.interfaces.UserService;
+import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
 import ru.yandex.practicum.filmorate.util.UserIDGenerator;
 import ru.yandex.practicum.filmorate.validator.UserValidator;
 
@@ -19,9 +21,10 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class InMemoryUserService implements UserService {
+public abstract class InMemoryUserService implements UserService {
 
-    private final UserStorage userStorage;
+    @Qualifier("inMemoryUserStorage")
+    protected final UserStorage userStorage;
 
     @Autowired
     public InMemoryUserService(UserStorage userStorage) {
@@ -30,18 +33,18 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public void addFriend(@NonNull Long id, @NonNull Long friendId) {
-        if (!userStorage.getUsers().containsKey(id)) {
+        if (!userStorage.contains(id)) {
             log.warn("Пользователь не найден: " + id);
             throw new UserNotFoundException();
-        } else if (!userStorage.getUsers().containsKey(friendId)) {
+        } else if (!userStorage.contains(friendId)) {
             log.warn("Пользователь не найден: " + friendId);
             throw new UserNotFoundException();
         } else {
-            Set<Long> friends = userStorage.getUserById(id).getFriends();
+            Set<Long> friends = userStorage.getById(id).getFriends();
             friends.add(friendId);
-            userStorage.getUserById(id).setFriends(friends);
+            userStorage.getById(id).setFriends(friends);
 
-            if (!userStorage.getUserById(friendId).getFriends().contains(id)) {
+            if (!userStorage.getById(friendId).getFriends().contains(id)) {
                 addFriend(friendId, id);
             }
 
@@ -51,18 +54,18 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public void deleteFriend(@NonNull Long id, @NonNull Long friendId) {
-        if (!userStorage.getUsers().containsKey(id)) {
+        if (!userStorage.contains(id)) {
             log.warn("Пользователь не найден: " + id);
             throw new UserNotFoundException();
-        } else if (!userStorage.getUsers().containsKey(friendId)) {
+        } else if (!userStorage.contains(friendId)) {
             log.warn("Пользователь не найден: " + friendId);
             throw new UserNotFoundException();
         } else {
-            Set<Long> friends = userStorage.getUsers().get(id).getFriends();
-            friends.remove(userStorage.getUserById(friendId).getId());
-            userStorage.getUsers().get(id).setFriends(friends);
+            Set<Long> friends = userStorage.getById(id).getFriends();
+            friends.remove(userStorage.getById(friendId).getId());
+            userStorage.getById(id).setFriends(friends);
 
-            if (userStorage.getUserById(friendId).getFriends().contains(id)) {
+            if (userStorage.getById(friendId).getFriends().contains(id)) {
                 deleteFriend(friendId, id);
             }
 
@@ -72,30 +75,29 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public List<User> getFriends(Long id) {
-        return userStorage.getUserById(id).getFriends().stream()
-                .map(userStorage::getUserById)
+        return userStorage.getById(id).getFriends().stream()
+                .map(userStorage::getById)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<User> getCommonFriends(Long id, Long otherId) {
-        Set<Long> friends1 = userStorage.getUserById(id).getFriends();
-        Set<Long> friends2 = userStorage.getUserById(otherId).getFriends();
+    public Collection<User> getCommonFriends(Long id, Long otherId) {
+        List<User> friends1 = getFriends(id);
+        List<User> friends2 = getFriends(otherId);
         return friends1.stream()
                 .filter(friends2::contains)
-                .map(userStorage::getUserById)
                 .collect(Collectors.toList());
     }
 
     @Override
     public User addUser(@NonNull @Valid User user) {
-        if (userStorage.getUsers().containsValue(user)) {
+        if (userStorage.contains(user.getId())) {
             log.warn("Добавление существующего пользователя " + user);
             throw new UserAlreadyExistException();
         } else {
             user.setId(UserIDGenerator.incrementAndGetUserId());
             UserValidator.validate(user);
-            userStorage.addUser(user);
+            userStorage.add(user);
             log.debug("Добавлен пользователь: " + user);
         }
         return user;
@@ -103,9 +105,9 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public User updateUser(@NonNull @Valid User user) {
-        if (userStorage.getUsers().containsKey(user.getId())) {
+        if (userStorage.contains(user.getId())) {
             UserValidator.validate(user);
-            userStorage.updateUser(user);
+            userStorage.update(user);
             log.debug("Пользователь id " + user.getId() + " обновлен");
         } else {
             throw new UserNotFoundException();
@@ -115,8 +117,8 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public User deleteUser(@NonNull @Valid User user) {
-        if (userStorage.getUsers().containsKey(user.getId())) {
-            userStorage.deleteUser(user);
+        if (userStorage.contains(user.getId())) {
+            userStorage.delete(user);
             log.debug("Удален пользователь: " + user);
         } else {
             throw new UserNotFoundException();
@@ -126,16 +128,18 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        if (!userStorage.getUsers().containsKey(id)) {
+        if (!userStorage.contains(id)) {
             throw new UserNotFoundException();
         }
         log.trace("Получен пользователь " + id);
-        return userStorage.getUserById(id);
+        return userStorage.getById(id);
     }
 
     @Override
     public Collection<User> getAllUsers() {
-        log.debug("Текущее количество пользователей: {}", userStorage.getUsers().size());
-        return userStorage.getAllUsers();
+        log.debug("Текущее количество пользователей: {}", userStorage.getAll().size());
+        return userStorage.getAll();
     }
+
+    public abstract boolean checkFriendsToAdd(@NonNull Long id, @NonNull Long friendId);
 }

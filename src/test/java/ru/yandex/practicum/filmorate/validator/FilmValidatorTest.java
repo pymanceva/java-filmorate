@@ -33,7 +33,7 @@ class FilmValidatorTest {
 
     @Test
     void validateThrowExceptionWhenFilmReleaseDateIncorrect() {
-        film.setReleaseDate(LocalDate.of(1895, 12, 27));
+        film.setReleaseDate((LocalDate.of(1895, 12, 27)));
         FilmReleaseDateValidateException e = assertThrows(FilmReleaseDateValidateException.class,
                 () -> FilmValidator.validate(film));
         assertEquals("Дата релиза фильма не может быть раньше 28.12.1895", e.getMessage());
